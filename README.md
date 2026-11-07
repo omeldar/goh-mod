@@ -17,9 +17,20 @@ waypoint list and says hello, the client half shows the screens. It changes no g
 
 ## What players get
 
-**A welcome screen**, once per server, the first time they join. It shows the server's own
-welcome text and a button for each thing they can switch on. Hover a button to see what it
-does; buttons for things they cannot use say why ("needs JourneyMap"). `/goh` opens it again.
+**A setup walkthrough**, once, the first time a player joins a GoH server. A page per mod:
+what it does, in plain words, and the one choice it needs - load the distant terrain, import
+the shared waypoints, say hello to Lumi. Only for what they actually have installed, so the
+walkthrough is as long as their mod folder and no longer.
+
+The last page before the send-off is every key the GoH mods register, in one list. Click a
+row, press a key. If the key is already doing something the screen says what ("W is also Walk
+Forward") and lets them decide, because occasionally that is the point. Esc while it is
+listening clears the key instead, for players who would rather use the commands. `/goh setup`
+reopens the whole thing.
+
+**A welcome screen** for every server after the first. It shows the server's own welcome text
+and a button for each thing they can switch on. Hover a button to see what it does; buttons
+for things they cannot use say why ("needs JourneyMap"). `/goh` opens it again.
 It is laid out from the bottom up, so it fits at the default window size and GUI scale, and the
 text scrolls if a server writes a lot of it.
 
@@ -54,7 +65,9 @@ Players without the mod still get the server's welcome text in chat, and a link 
 ## Commands
 
 ```
-/goh                          the welcome screen
+G                             the welcome screen (rebindable)
+/goh                          the same
+/goh setup                    the first-join walkthrough, again
 /goh lumi                     the Lumi introduction
 /goh terrain [on|off]         distant terrain: show, start or stop
 /goh waypoints                the server's shared list

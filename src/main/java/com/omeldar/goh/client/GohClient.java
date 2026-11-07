@@ -3,6 +3,7 @@ package com.omeldar.goh.client;
 import com.omeldar.goh.GohMod;
 import com.omeldar.goh.client.bridge.ApiServer;
 import com.omeldar.goh.client.bridge.LumiLink;
+import com.omeldar.goh.client.ui.SetupScreen;
 import com.omeldar.goh.client.ui.WelcomeScreen;
 import com.omeldar.goh.net.GohPayload;
 import net.fabricmc.api.ClientModInitializer;
@@ -65,11 +66,13 @@ public final class GohClient implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(GohClient::tick);
         Commands.register();
+        Keybinds.register();
         GohMod.LOG.info("goh client ready");
     }
 
     private static void tick(MinecraftClient mc) {
         TerrainProgress.tick(mc);
+        Keybinds.onTick(mc);
         boolean gohScreen = mc.currentScreen instanceof com.omeldar.goh.client.ui.GohScreen;
         if (gohScreen != screenWasOpen) {
             screenWasOpen = gohScreen;
@@ -92,7 +95,7 @@ public final class GohClient implements ClientModInitializer {
         if (Session.gohServer && !cfg.welcomed.contains(key)) {
             cfg.welcomed.add(key);
             ClientConfig.save();
-            mc.setScreen(new WelcomeScreen(WelcomeScreen.Page.MAIN));
+            mc.setScreen(cfg.setupDone ? new WelcomeScreen(WelcomeScreen.Page.MAIN) : new SetupScreen());
         } else if (!cfg.lumiIntroSeen && lumiInstalled()) {
             mc.setScreen(new WelcomeScreen(WelcomeScreen.Page.LUMI));
         }

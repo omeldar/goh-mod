@@ -4,6 +4,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.omeldar.goh.SharedWaypoint;
 import com.omeldar.goh.client.map.Maps;
+import com.omeldar.goh.client.ui.SetupScreen;
 import com.omeldar.goh.client.ui.WelcomeScreen;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -23,6 +24,10 @@ final class Commands {
                 literal("goh")
                         .executes(ctx -> open(WelcomeScreen.Page.MAIN))
                         .then(literal("lumi").executes(ctx -> open(WelcomeScreen.Page.LUMI)))
+                        .then(literal("setup").executes(ctx -> {
+                            GohClient.openLater(new SetupScreen());
+                            return 1;
+                        }))
                         .then(literal("terrain")
                                 .executes(ctx -> say("distant terrain: " + Actions.terrainState()))
                                 .then(literal("on").executes(ctx -> say(Actions.terrain(true))))

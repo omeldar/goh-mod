@@ -23,6 +23,12 @@ public final class ClientConfig {
     /** Servers whose welcome screen has been shown; it opens by itself only the first time. */
     public List<String> welcomed = new ArrayList<>();
     /**
+     * The setup walkthrough runs once, on the first GoH server joined. After that a new
+     * server gets the short welcome screen instead, since the keys and the mod introductions
+     * are the player's, not the server's. {@code /goh setup} reopens it either way.
+     */
+    public boolean setupDone = false;
+    /**
      * Distant terrain from the server, through LOD Server Support: "ask" until the player
      * decides, then "on" or "off". Anything but "on" keeps downloads off, so nobody pulls
      * gigabytes of terrain without choosing to.

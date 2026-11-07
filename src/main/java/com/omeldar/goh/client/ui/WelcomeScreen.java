@@ -1,11 +1,8 @@
 package com.omeldar.goh.client.ui;
 
-import com.omeldar.goh.client.Actions;
 import com.omeldar.goh.client.ClientConfig;
 import com.omeldar.goh.client.GohClient;
 import com.omeldar.goh.client.Session;
-import com.omeldar.goh.client.Terrain;
-import com.omeldar.goh.client.map.Maps;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
@@ -19,7 +16,7 @@ import java.util.List;
 
 /**
  * The welcome screen: what this server is, and what the player can switch on. A second page
- * introduces Lumi.
+ * introduces Lumi, and the setup walkthrough lives one button away for anyone who skipped it.
  *
  * <p>Laid out from the bottom up so it fits at the default window size and GUI scale: the
  * buttons are placed first, and the text gets whatever height is left, scrolling if it needs
@@ -71,8 +68,8 @@ public final class WelcomeScreen extends Screen implements GohScreen {
             return;
         }
 
-        addDrawableChild(terrainButton(x, y));
-        addDrawableChild(importButton(x, y + ROW));
+        addDrawableChild(FeatureButtons.terrain(client, this, x, y, BUTTON_WIDTH, this::clearAndInit));
+        addDrawableChild(FeatureButtons.importWaypoints(x, y + ROW, BUTTON_WIDTH, this::clearAndInit));
         ButtonWidget share = ButtonWidget.builder(Text.literal("Share a waypoint..."),
                 b -> { if (client != null) client.setScreen(new ShareScreen(this)); })
                 .dimensions(x, y + 2 * ROW, BUTTON_WIDTH, 20).build();
@@ -91,58 +88,14 @@ public final class WelcomeScreen extends Screen implements GohScreen {
                 .dimensions(x + BUTTON_WIDTH / 2 + 2, y + 3 * ROW, BUTTON_WIDTH / 2 - 2, 20).build();
         site.active = Session.website != null && Session.website.startsWith("https://");
         addDrawableChild(site);
+        ButtonWidget setup = ButtonWidget.builder(Text.literal("Setup walkthrough"),
+                b -> { if (client != null) client.setScreen(new SetupScreen()); })
+                .dimensions(x, y + 4 * ROW, BUTTON_WIDTH / 2 - 2, 20).build();
+        setup.setTooltip(Tooltip.of(Text.literal("The first-join walkthrough again: what each "
+                + "mod does, what to switch on, and every key in one list.")));
+        addDrawableChild(setup);
         addDrawableChild(ButtonWidget.builder(Text.literal("Done"), b -> close())
-                .dimensions(x, y + 4 * ROW, BUTTON_WIDTH, 20).build());
-    }
-
-    private ButtonWidget terrainButton(int x, int y) {
-        boolean on = Boolean.TRUE.equals(Terrain.receiving());
-        String label;
-        boolean usable = true;
-        if (!Session.terrainOffered) {
-            label = "Distant terrain: not offered here";
-            usable = false;
-        } else if (!Terrain.installed()) {
-            label = "Distant terrain: needs LOD Server Support";
-            usable = false;
-        } else {
-            label = on ? "Distant terrain: on (stop)" : "Load distant terrain...";
-        }
-        ButtonWidget b = ButtonWidget.builder(Text.literal(label), btn -> {
-            if (client == null) return;
-            if (Boolean.TRUE.equals(Terrain.receiving())) {
-                GohClient.say(Actions.terrain(false), true);
-                clearAndInit();
-            } else {
-                client.setScreen(new TerrainConfirmScreen(this));
-            }
-        }).dimensions(x, y, BUTTON_WIDTH, 20).build();
-        b.active = usable;
-        b.setTooltip(Tooltip.of(Text.literal("Sends the server's map to Voxy, so you can see far "
-                + "past your render distance. Off until you choose; you can stop it any time.")));
-        return b;
-    }
-
-    private ButtonWidget importButton(int x, int y) {
-        String label;
-        boolean usable = true;
-        if (!Session.waypointsOffered) {
-            label = "Shared waypoints: not offered here";
-            usable = false;
-        } else if (!Maps.available()) {
-            label = "Shared waypoints: needs JourneyMap";
-            usable = false;
-        } else {
-            label = "Import shared waypoints" + (Session.waypointsLoaded ? " (" + Session.waypoints.size() + ")" : "");
-        }
-        ButtonWidget b = ButtonWidget.builder(Text.literal(label), btn -> {
-            GohClient.say(Actions.importWaypoints(), true);
-            clearAndInit();
-        }).dimensions(x, y, BUTTON_WIDTH, 20).build();
-        b.active = usable;
-        b.setTooltip(Tooltip.of(Text.literal("Adds the places players have shared to a \""
-                + Maps.groupName() + "\" group in JourneyMap. Your own waypoints are not touched.")));
-        return b;
+                .dimensions(x + BUTTON_WIDTH / 2 + 2, y + 4 * ROW, BUTTON_WIDTH / 2 - 2, 20).build());
     }
 
     private List<String> mainText() {
