@@ -30,6 +30,8 @@ public final class GohClient implements ClientModInitializer {
     private static int sinceJoin = -1;
     private static boolean decided;
     private static Screen pending;
+    /** Whether a GoH screen was open last tick; the server protects the player while it is. */
+    private static boolean screenWasOpen;
 
     @Override
     public void onInitializeClient() {
@@ -68,6 +70,13 @@ public final class GohClient implements ClientModInitializer {
 
     private static void tick(MinecraftClient mc) {
         TerrainProgress.tick(mc);
+        boolean gohScreen = mc.currentScreen instanceof com.omeldar.goh.client.ui.GohScreen;
+        if (gohScreen != screenWasOpen) {
+            screenWasOpen = gohScreen;
+            com.google.gson.JsonObject o = new com.google.gson.JsonObject();
+            o.addProperty("open", gohScreen);
+            Session.send("screen", o);
+        }
         if (pending != null && mc.currentScreen == null) {
             Screen s = pending;
             pending = null;

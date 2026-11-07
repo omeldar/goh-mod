@@ -26,7 +26,7 @@ import java.util.List;
  * to. The explanations live in button tooltips rather than in paragraphs, so the screen stays
  * short and each one is next to the thing it explains.
  */
-public final class WelcomeScreen extends Screen {
+public final class WelcomeScreen extends Screen implements GohScreen {
     public enum Page { MAIN, LUMI }
 
     private static final int TEXT_WIDTH = 320;
@@ -147,7 +147,8 @@ public final class WelcomeScreen extends Screen {
 
     private List<String> mainText() {
         List<String> out = new ArrayList<>(Session.welcome);
-        out.add("Hover a button to see what it does. /goh opens this again.");
+        out.add("You can't be hurt while this screen is open. Hover a button to see what it does; "
+              + "/goh opens this again.");
         return out;
     }
 

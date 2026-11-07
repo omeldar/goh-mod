@@ -16,7 +16,7 @@ import java.util.List;
  * The one question before distant terrain starts: here is roughly how much and how long, you
  * can play meanwhile, and you can stop at any point. Nothing loads until "Start".
  */
-final class TerrainConfirmScreen extends Screen {
+final class TerrainConfirmScreen extends Screen implements GohScreen {
     private static final int BUTTON_WIDTH = 220;
 
     private final Screen parent;

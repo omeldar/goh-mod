@@ -18,7 +18,7 @@ import java.util.List;
  * spot they are standing on; "Server list" shows what is shared, with Remove on the ones this
  * player may change (their own, or any of them for the server owner).
  */
-public final class ShareScreen extends Screen {
+public final class ShareScreen extends Screen implements GohScreen {
     /** Rows per page; set from the window height so the list never runs off the screen. */
     private int rows = 6;
     private static final int W = 300;

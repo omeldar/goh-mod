@@ -94,8 +94,10 @@ public final class GohServer {
                             ? "removed \"" + name + "\" from the server" : refused);
                     if (refused == null) broadcast(server);
                 }
-                default -> result(p, false, "this server does not know \"" + msg.kind()
-                        + "\" - it may be running an older GoH mod");
+                case "screen" -> SpawnGuard.onScreen(p, server, body.has("open") && body.get("open").getAsBoolean());
+                // A newer client may say things this server does not know; stay quiet about it
+                // rather than put an error in the player's chat.
+                default -> GohMod.LOG.debug("ignoring unknown message {} from {}", msg.kind(), p.getName().getString());
             }
         } catch (Exception e) {
             GohMod.LOG.warn("bad {} message from {}", msg.kind(), p.getName().getString(), e);

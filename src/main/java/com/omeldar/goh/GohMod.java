@@ -4,6 +4,8 @@ import com.omeldar.goh.net.GohPayload;
 import com.omeldar.goh.server.AdminCommand;
 import com.omeldar.goh.server.GohServer;
 import com.omeldar.goh.server.ServerConfig;
+import com.omeldar.goh.server.SpawnGuard;
+import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import com.omeldar.goh.server.TerrainInfo;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.api.ModInitializer;
@@ -35,8 +37,13 @@ public final class GohMod implements ModInitializer {
 
         ServerPlayNetworking.registerGlobalReceiver(GohPayload.ToServer.ID,
                 (payload, ctx) -> GohServer.onMessage(ctx.player(), payload));
-        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) ->
-                GohServer.onJoin(handler.getPlayer()));
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            SpawnGuard.onJoin(handler.getPlayer(), server);
+            GohServer.onJoin(handler.getPlayer());
+        });
+        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> SpawnGuard.onLeave(handler.getPlayer()));
+        ServerTickEvents.END_SERVER_TICK.register(SpawnGuard::tick);
+        ServerLivingEntityEvents.ALLOW_DAMAGE.register(SpawnGuard::allowDamage);
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> GohServer.WAYPOINTS.unload());
         ServerLifecycleEvents.SERVER_STARTED.register(TerrainInfo::refresh);
         ServerTickEvents.END_SERVER_TICK.register(TerrainInfo::tick);
