@@ -100,8 +100,8 @@ public final class WelcomeScreen extends Screen implements GohScreen {
 
     private List<String> mainText() {
         List<String> out = new ArrayList<>(Session.welcome);
-        out.add("You can't be hurt while this screen is open. Hover a button to see what it does; "
-              + "/goh opens this again.");
+        out.add((GohClient.forcedSetup() ? "You can't be hurt while this first screen is open. " : "")
+              + "Hover a button to see what it does; /goh opens this again.");
         return out;
     }
 

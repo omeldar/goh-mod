@@ -33,6 +33,8 @@ public final class GohClient implements ClientModInitializer {
     private static Screen pending;
     /** Whether a GoH screen was open last tick; the server protects the player while it is. */
     private static boolean screenWasOpen;
+    /** True from the moment the server's first-join setup is opened until it is closed. */
+    private static boolean forced;
 
     @Override
     public void onInitializeClient() {
@@ -78,7 +80,9 @@ public final class GohClient implements ClientModInitializer {
             screenWasOpen = gohScreen;
             com.google.gson.JsonObject o = new com.google.gson.JsonObject();
             o.addProperty("open", gohScreen);
+            o.addProperty("forced", gohScreen && forced);
             Session.send("screen", o);
+            if (!gohScreen) forced = false;
         }
         if (pending != null && mc.currentScreen == null) {
             Screen s = pending;
@@ -95,10 +99,16 @@ public final class GohClient implements ClientModInitializer {
         if (Session.gohServer && !cfg.welcomed.contains(key)) {
             cfg.welcomed.add(key);
             ClientConfig.save();
+            forced = true;
             mc.setScreen(cfg.setupDone ? new WelcomeScreen(WelcomeScreen.Page.MAIN) : new SetupScreen());
         } else if (!cfg.lumiIntroSeen && lumiInstalled()) {
             mc.setScreen(new WelcomeScreen(WelcomeScreen.Page.LUMI));
         }
+    }
+
+    /** Whether the screen on show is the one the server opened on first join (the protected one). */
+    public static boolean forcedSetup() {
+        return forced;
     }
 
     /** The hello arrived. Fetch the shared list so it is ready when someone asks. */

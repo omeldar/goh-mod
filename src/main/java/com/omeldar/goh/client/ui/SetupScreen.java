@@ -354,8 +354,8 @@ public final class SetupScreen extends Screen implements GohScreen {
             out.add("The next few pages take them one at a time. Each one says what it does and "
                   + "gives you the choice it needs, and the last one puts every key in a single "
                   + "list so you never have to go digging through Controls.");
-            out.add("Nothing can hurt you while this is open, and /goh setup brings it back "
-                  + "whenever you want another look.");
+            out.add((GohClient.forcedSetup() ? "Nothing can hurt you while this first setup is open, and "
+                    : "") + "/goh setup brings it back whenever you want another look.");
             return out;
         }
     }

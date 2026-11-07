@@ -102,7 +102,9 @@ public final class GohServer {
                             ? "removed \"" + name + "\" from the server" : refused);
                     if (refused == null) broadcast(server);
                 }
-                case "screen" -> SpawnGuard.onScreen(p, server, body.has("open") && body.get("open").getAsBoolean());
+                case "screen" -> SpawnGuard.onScreen(p, server,
+                        body.has("open") && body.get("open").getAsBoolean(),
+                        body.has("forced") && body.get("forced").getAsBoolean());
                 // A newer client may say things this server does not know; stay quiet about it
                 // rather than put an error in the player's chat.
                 default -> GohMod.LOG.debug("ignoring unknown message {} from {}", msg.kind(), p.getName().getString());

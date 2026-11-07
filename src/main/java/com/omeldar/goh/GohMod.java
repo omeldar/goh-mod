@@ -41,7 +41,7 @@ public final class GohMod implements ModInitializer {
             SpawnGuard.onJoin(handler.getPlayer(), server);
             GohServer.onJoin(handler.getPlayer());
         });
-        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> SpawnGuard.onLeave(handler.getPlayer()));
+        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> SpawnGuard.onLeave(handler.getPlayer(), server));
         ServerTickEvents.END_SERVER_TICK.register(SpawnGuard::tick);
         ServerLivingEntityEvents.ALLOW_DAMAGE.register(SpawnGuard::allowDamage);
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> GohServer.WAYPOINTS.unload());
