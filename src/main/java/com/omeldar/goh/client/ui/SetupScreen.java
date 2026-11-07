@@ -386,7 +386,7 @@ public final class SetupScreen extends Screen implements GohScreen {
                   + "download - closer to gigabytes than megabytes - which is why it stays off "
                   + "until you ask for it. You can stop part-way and keep whatever arrived.");
             if (Session.terrainColumns > 0) {
-                out.add("This server has roughly " + Session.terrainColumns + " columns to send.");
+                out.add("This server has roughly " + String.format(java.util.Locale.ROOT, "%,d", Session.terrainColumns) + " columns to send.");
             }
             if (!Terrain.installed()) {
                 out.add("Voxy and LOD Server Support are not installed, so the button below is "
