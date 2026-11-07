@@ -19,12 +19,28 @@ import java.nio.file.Path;
  */
 public final class LumiLink {
     static final String HINT =
-            "GoH is the server's own mod. It offers a shared waypoint list (imported into "
-          + "JourneyMap) and distant terrain (LOD Server Support feeding Voxy). Call "
-          + "goh_get_status first. Only share or remove a waypoint when the player asks for that "
-          + "specific one: uploads are always the player's decision. A shared waypoint can be "
-          + "overwritten or removed only by its owner or the server owner; refusals say whose it "
-          + "is. Switching distant terrain on can download a lot, so do it when asked.";
+            "GoH is the GoH server's own mod; players may call any of this \"the GoH stuff\". "
+          + "Call goh_get_status first: it says what the server offers, which family mods the "
+          + "server runs (serverMods, e.g. keeper), the player's actual key bindings for every "
+          + "GoH-family mod (keys), and how far the map download is (distantTerrain). "
+          + "DISTANT TERRAIN is also called the map download, LOD download, Voxy terrain, "
+          + "\"seeing the whole map\": LOD Server Support sends the server's explored map to Voxy "
+          + "so it shows far past render distance. Off until the player chooses; the first load "
+          + "of the whole map can take hours and is safe to stop at any time - what arrived "
+          + "stays, turning it on again resumes. Stop it with goh_set_distant_terrain on=false, "
+          + "/goh terrain off, the [Stop] link in the progress line (chat, every five minutes), "
+          + "or the button on the /goh screen. Only switch it on when asked. "
+          + "SETUP: the walkthrough on first join (one page per mod, then all keys, then \"Have "
+          + "fun.\"); /goh setup reopens it, /goh opens the server screen. Players cannot be hurt "
+          + "while a GoH screen is open or right after joining. "
+          + "SHARED WAYPOINTS: a server list for JourneyMap. goh_import_waypoints puts them in a "
+          + "\"GoH server\" group; share or remove only the one the player asks for - uploads are "
+          + "always their decision, and only the owner or the server owner can overwrite or remove "
+          + "one (refusals say whose it is). Commands: /goh waypoints, /goh waypoints import, "
+          + "/goh waypoints share <name>, /goh waypoints here <name>, /goh waypoints remove <name>. "
+          + "If serverMods has keeper, ops can use /keeper status, /keeper lag top, /keeper afk. "
+          + "Keys can be changed on the setup's keys page or in Controls; Esc while choosing "
+          + "unbinds, and every key has a command too.";
 
     private LumiLink() {}
 

@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 import java.util.Locale;
 
 /**
- * Keeps the player told while distant terrain loads: a chat line every half minute with how
+ * Keeps the player told while distant terrain loads: a chat line every five minutes with how
  * much has arrived, how much is left and roughly how long, and a [Stop] they can click. A last
  * line when it has caught up. Reads LSS's own status counters, by reflection, once a second.
  */
@@ -22,7 +22,9 @@ public final class TerrainProgress {
      * 972 MB, about 37 KiB each, and they arrived at almost exactly the 4 MiB/s per-player cap.
      */
     public static final double BYTES_PER_COLUMN = 37 * 1024;
-    private static final int REPORT_EVERY_SECONDS = 30;
+    /** A long download should not fill chat; Lumi can answer "how far is it" in between. */
+    private static final int REPORT_EVERY_SECONDS = 300;
+    private static final int RATE_WINDOW_SECONDS = 30;
     private static final int QUIET_SECONDS_FOR_DONE = 20;
 
     private static boolean active;
@@ -79,7 +81,7 @@ public final class TerrainProgress {
         long got = Math.max(0, s.received - startColumns);
 
         // Rate over a sliding ~30 s window, so a slow start does not stick to the estimate.
-        if (now - windowMillis >= REPORT_EVERY_SECONDS * 1000L) {
+        if (now - windowMillis >= RATE_WINDOW_SECONDS * 1000L) {
             double fresh = (s.received - windowColumns) * 1000.0 / Math.max(1, now - windowMillis);
             rate = rate == 0 ? fresh : rate * 0.4 + fresh * 0.6;
             windowColumns = s.received;
@@ -113,7 +115,27 @@ public final class TerrainProgress {
         }
     }
 
+    private static long lastGot;
+
+    /** One line for Lumi or /goh terrain: how far the download is right now. */
+    public static String statusLine() {
+        if (!active) {
+            Boolean on = Terrain.receiving();
+            return Boolean.TRUE.equals(on) ? "on, nothing left to download" : "not downloading";
+        }
+        Snapshot s = Snapshot.read();
+        long got = s == null ? lastGot : Math.max(0, s.received - startColumns);
+        StringBuilder b = new StringBuilder("downloading: ").append(fmt(got)).append(" columns so far");
+        long total = Session.terrainColumns;
+        if (total > 0) {
+            b.append(" of ~").append(fmt(total)).append(" (").append(Math.min(99, got * 100 / Math.max(1, total))).append("%)");
+            if (rate > 0.5) b.append(", roughly ").append(duration((long) (Math.max(0, total - got) / rate))).append(" left");
+        }
+        return b.append("; /goh terrain off stops it").toString();
+    }
+
     private static void report(long got) {
+        lastGot = got;
         StringBuilder line = new StringBuilder("distant terrain: ").append(fmt(got)).append(" columns");
         long total = Session.terrainColumns;
         if (total > 0) {

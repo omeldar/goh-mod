@@ -121,7 +121,27 @@ final class Mcp {
         o.addProperty("voxyInstalled", Terrain.voxyInstalled());
         o.addProperty("distantTerrain", Actions.terrainState());
         o.addProperty("lumiInstalled", GohClient.lumiInstalled());
+        o.add("serverMods", Session.serverMods);
+        o.add("keys", keys());
         return o.toString();
+    }
+
+    /**
+     * Every key binding of the GoH family (GoH, Planner, Autopilot, Lumi) with what it is bound
+     * to right now, so "which key opens the planner" gets the player's real answer.
+     */
+    private static JsonObject keys() {
+        JsonObject out = new JsonObject();
+        var mc = net.minecraft.client.MinecraftClient.getInstance();
+        if (mc == null || mc.options == null) return out;
+        for (var kb : mc.options.allKeys) {
+            String id = kb.getId();
+            if (!(id.startsWith("key.goh.") || id.startsWith("key.planner.") || id.startsWith("key.autopilot.")
+                    || id.startsWith("key.lumi"))) continue;
+            String name = net.minecraft.text.Text.translatable(id).getString();
+            out.addProperty(name, kb.isUnbound() ? "unbound" : kb.getBoundKeyLocalizedText().getString());
+        }
+        return out;
     }
 
     private static String sharedList() {

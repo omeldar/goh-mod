@@ -38,7 +38,7 @@ text scrolls if a server writes a lot of it.
 feeding [Voxy](https://modrinth.com/mod/voxy). Off until the player chooses: a first load can
 be a gigabyte or more, and that should be their decision. Before it starts they see roughly how
 much there is and how long it will take at this server's speed. While it loads, a chat line
-every half minute says how far it is and how long is left, with a **[Stop]** link. A last line
+every five minutes says how far it is and how long is left, with a **[Stop]** link. A last line
 says when it has caught up. Stopping keeps what loaded; switching it on again carries on.
 
 Tested against a test server with 34,365 generated columns: the transfer ran at almost exactly

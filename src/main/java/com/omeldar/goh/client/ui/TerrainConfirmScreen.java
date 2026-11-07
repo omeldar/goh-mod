@@ -36,7 +36,7 @@ final class TerrainConfirmScreen extends Screen implements GohScreen {
         p.add(estimate == null
                 ? "The server has not said how much terrain there is yet, so there is no estimate."
                 : "This server has " + estimate + ".");
-        p.add("You can keep playing while it loads. Progress shows in chat every half minute.");
+        p.add("You can keep playing while it loads. Progress shows in chat every five minutes.");
         p.add("Stop at any point with the [Stop] link in chat, /goh terrain off, or this screen. "
             + "What has loaded stays, and turning it back on carries on from there.");
         text.layout(textRenderer, p, Math.min(320, width - 40), 30, y - 8);

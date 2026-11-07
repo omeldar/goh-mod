@@ -53,6 +53,14 @@ public final class GohServer {
             hello.addProperty("terrainDistance", TerrainInfo.distanceChunks());
             hello.addProperty("owner", isOwner(p));
             hello.addProperty("version", GohMod.version());
+            // Which of the family the server runs, so the client (and Lumi) know that e.g.
+            // /keeper exists here.
+            JsonObject mods = new JsonObject();
+            for (String id : new String[]{"goh", "keeper", "lss", "worldgrow"}) {
+                FabricLoader.getInstance().getModContainer(id).ifPresent(c ->
+                        mods.addProperty(id, c.getMetadata().getVersion().getFriendlyString()));
+            }
+            hello.add("serverMods", mods);
             send(p, "hello", hello);
             return;
         }

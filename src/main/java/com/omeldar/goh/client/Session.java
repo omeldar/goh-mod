@@ -25,6 +25,8 @@ public final class Session {
     public static String serverName = "";
     public static List<String> welcome = new ArrayList<>();
     public static String website = "";
+    /** Family mods the server runs, id to version: goh, keeper, lss, worldgrow. */
+    public static JsonObject serverMods = new JsonObject();
     public static boolean waypointsOffered;
     public static boolean terrainOffered;
     /** Generated chunks the server could send, -1 if it has not counted yet. */
@@ -49,6 +51,7 @@ public final class Session {
         serverName = "";
         welcome = new ArrayList<>();
         website = "";
+        serverMods = new JsonObject();
         waypointsOffered = false;
         terrainOffered = false;
         terrainColumns = -1;
@@ -77,6 +80,8 @@ public final class Session {
                 welcome = new ArrayList<>();
                 if (o.has("welcome")) o.getAsJsonArray("welcome").forEach(e -> welcome.add(e.getAsString()));
                 website = str(o, "website", "");
+                serverMods = o.has("serverMods") && o.get("serverMods").isJsonObject()
+                        ? o.getAsJsonObject("serverMods") : new JsonObject();
                 waypointsOffered = o.has("waypoints") && o.get("waypoints").getAsBoolean();
                 terrainOffered = o.has("distantTerrain") && o.get("distantTerrain").getAsBoolean();
                 owner = o.has("owner") && o.get("owner").getAsBoolean();

@@ -108,12 +108,13 @@ public final class Actions {
                 : " This server does not send any, but others with LSS will.";
         String estimate = TerrainProgress.estimate();
         return "distant terrain is on" + (estimate == null ? "" : ": " + estimate) + ". Progress "
-             + "shows in chat every half minute, and /goh terrain off stops it at any point."
+             + "shows in chat every five minutes, and /goh terrain off stops it at any point."
              + (Terrain.voxyInstalled() ? "" : " Install Voxy to see it.") + note;
     }
 
     public static String terrainState() {
         if (!Terrain.installed()) return "not installed";
+        if (TerrainProgress.active()) return TerrainProgress.statusLine();
         Boolean now = Terrain.receiving();
         String choice = ClientConfig.get().distantTerrain;
         return (now == null ? "unknown" : now ? "on" : "off")
