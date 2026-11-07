@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "goh",
+  "version": "${version}",
+  "name": "GoH",
+  "description": "The GoH server's own mod. Welcomes players and shows them what the server offers: distant terrain for Voxy, a shared list of waypoints for JourneyMap, and an introduction to Lumi. Changes no game mechanic. Unofficial: not made or endorsed by Mojang, Microsoft or Anthropic.",
+  "authors": ["omeldar"],
+  "contact": {
+    "homepage": "https://github.com/omeldar/goh-mod",
+    "sources": "https://github.com/omeldar/goh-mod",
+    "issues": "https://github.com/omeldar/goh-mod/issues"
+  },
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["com.omeldar.goh.GohMod"],
+    "client": ["com.omeldar.goh.client.GohClient"],
+    "journeymap": ["com.omeldar.goh.client.map.JourneyMapPlugin"]
+  },
+  "depends": {
+    "fabricloader": ">=0.18.3",
+    "minecraft": "~1.21.11",
+    "java": ">=21",
+    "fabric-api": ">=0.141.3"
+  },
+  "suggests": {
+    "lumipet": "*",
+    "journeymap": "*",
+    "lss": "*",
+    "voxy": "*"
+  }
+}
